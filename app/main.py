@@ -28,7 +28,11 @@ def execute_command(x_token: Annotated[str, Header()], data: Data):
         token = decode(x_token, key=open(PUBLIC_KEY_PATH).read(), algorithms=['RS256'])
     except Exception as e:
         raise HTTPException(status_code=401, detail="Unauthorized")
-    return {"result": kube.execute_command(user_id=token["sub"], command=data.cmd)}
+    if kube.execute_command(user_id=token["sub"], command=data.cmd):
+        return {"result": "ok"}
+    else:
+        raise HTTPException(status_code=500, detail="Error")
+
 @app.post("/create")
 def create_accessbox(x_token: Annotated[str, Header()]):
     token = None
@@ -38,6 +42,19 @@ def create_accessbox(x_token: Annotated[str, Header()]):
         raise HTTPException(status_code=401, detail="Unauthorized")
     kube.create_accessbox(user_id=token["sub"])
     return {"status": "ok"}
+
+@app.get("/logs")
+def get_logs(x_token: Annotated[str, Header()]):
+    token = None
+    try:
+        token = decode(x_token, key=open(PUBLIC_KEY_PATH).read(), algorithms=['RS256'])
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    data = kube.get_logs(user_id=token["sub"])
+    if data:
+        return {"logs": data}
+    else:
+        raise HTTPException(status_code=500, detail="Error")
 
 
 @app.get("/health")
