@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import FastAPI, HTTPException, Header
 from pydantic import BaseModel
 from .config import KUBERNETES_KEY, KUBERNETES_URL, PUBLIC_KEY_PATH
-from .models import Kubernetes, RedisConnector, Database
+from .models import Kubernetes
 from jwt import decode
 
 kube: Kubernetes
