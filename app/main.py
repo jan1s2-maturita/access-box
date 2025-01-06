@@ -57,6 +57,18 @@ def get_logs(x_token: Annotated[str, Header()]):
     else:
         raise HTTPException(status_code=500, detail="Error")
 
+@app.delete("/delete")
+def delete_accessbox(x_token: Annotated[str, Header()]):
+    token = None
+    try:
+        token = decode(x_token, key=open(PUBLIC_KEY_PATH).read(), algorithms=['RS256'])
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    if kube.delete_accessbox(user_id=token["sub"]):
+        return {"status": "ok"}
+    else:
+        raise HTTPException(status_code=500, detail="Error")
 
 @app.get("/health")
 def health():
