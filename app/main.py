@@ -39,6 +39,7 @@ def create_accessbox(x_token: Annotated[str, Header()]):
     try:
         token = decode(x_token, key=open(PUBLIC_KEY_PATH).read(), algorithms=['RS256'])
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=401, detail="Unauthorized")
     kube.create_accessbox(user_id=token["sub"])
     return {"status": "ok"}
