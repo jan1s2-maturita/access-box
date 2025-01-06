@@ -41,7 +41,7 @@ def create_accessbox(x_token: Annotated[str, Header()]):
     except Exception as e:
         print(e)
         raise HTTPException(status_code=401, detail="Unauthorized")
-    kube.create_accessbox(user_id=token["sub"])
+    print(kube.create_accessbox(user_id=token["sub"]))
     return {"status": "ok"}
 
 @app.get("/logs")
