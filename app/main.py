@@ -14,7 +14,8 @@ async def init(app: FastAPI):
     kube = Kubernetes(key=KUBERNETES_KEY, url=KUBERNETES_URL)
     yield
 
-app = FastAPI(lifespan=init)
+app = FastAPI(lifespan=init,
+              root_path="/api/accessbox")
 
 
 class Data(BaseModel):
